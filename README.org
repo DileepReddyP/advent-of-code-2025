@@ -1,0 +1,3 @@
+#+TITLE: Advent of Code 2025
+
+Solving using Guile Scheme
