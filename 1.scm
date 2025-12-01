@@ -25,24 +25,20 @@ L82
 
 (define (modulo-ring insts part2?)
   (let ([steps (string-split insts #\newline)]
-        [loc 50]
-        [zeros 0])
-    (do-ec (:list step steps)
-           (not (string-null? step))
-           (:let dir (if (char=? (string-ref step 0) #\R) + -))
-           (:let turn (string->number (substring step 1)))
-           (begin
-             (if part2?
-                 (do-ec (:range s turn)
-                        (begin
-                          (set! loc (modulo (dir loc 1) 100))
-                          (when (zero? loc)
-                            (set! zeros (1+ zeros)))))
-                 (let ([m (modulo (dir loc turn) 100)])
-                   (set! loc m)
-                   (when (zero? loc)
-                     (set! zeros (1+ zeros)))))))
-    zeros))
+        [loc 50])
+    (sum-ec (:list step steps)
+            (not (string-null? step))
+            (:let dir (if (char=? (string-ref step 0) #\R) + -))
+            (:let turn (string->number (substring step 1)))
+            (begin
+              (if part2?
+                  (sum-ec (:range s turn)
+                          (begin
+                            (set! loc (modulo (dir loc 1) 100))
+                            (if (zero? loc) 1 0)))
+                  (let ([m (modulo (dir loc turn) 100)])
+                    (set! loc m)
+                    (if (zero? loc) 1 0)))))))
 
 (define (solve-1 data)
   (statprof
