@@ -37,13 +37,13 @@
   (let* ([s-n (number->string n)]
          [l-n (string-length s-n)]
          [uh-n (substring s-n 0 (/ l-n 2))]
-         [m-n (string->number (string-append uh-n uh-n))])
+         [m-n (string->number (string-concatenate (make-list 2 uh-n)))])
     (= m-n n)))
 
 (define (construct-rep-num s-n l-n pd)
   (let* ([reps (euclidean-quotient l-n pd)]
          [s-l (substring s-n 0 pd)]
-         [s-m (string-concatenate (list-ec (:range i reps) s-l))])
+         [s-m (string-concatenate (make-list reps s-l))])
     (string->number s-m)))
 
 (define (is-rep-num? n)
