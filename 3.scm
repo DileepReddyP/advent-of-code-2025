@@ -35,7 +35,7 @@
 ;;     max-j))
 
 (define (find-joltage acc js n)
-  (if (or (zero? n) (not js))
+  (if (zero? n)
       acc
       (let* ([rest-j (drop-right js (1- n))]
              [max-j (apply max rest-j)]
