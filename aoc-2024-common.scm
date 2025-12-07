@@ -10,8 +10,10 @@
   #:export (create-grid-dict
             grid-dict-ref
             grid-directions
-            display-grid-dict
             grid-directions-with-diagonals
+            grid-dir-alist
+            grid-dir-alist-diag
+            display-grid-dict
             copy-hash-table
             char->number
             list-combinations
@@ -46,6 +48,12 @@
 
 (define grid-directions
   '(1.0+0.0i 0.0+1.0i -1.0+0.0i 0.0-1.0i))
+
+(define grid-dir-alist
+  (map (cut cons <> <>) '(s w n e) grid-directions))
+
+(define grid-dir-alist-diag
+  (map (cut cons <> <>) '(s sw w nw n ne e se) grid-directions-with-diagonals))
 
 (define (display-grid-dict grid-dict h w)
   (do-ec (:range i h)
