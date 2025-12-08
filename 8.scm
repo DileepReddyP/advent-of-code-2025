@@ -57,36 +57,33 @@
         [done #f])
     (do-ec (:list pd (index i) pds)
            (not done)
-           (begin
-             (match-let ([(_ . (p1 p2)) pd])
-               (match (list (hash-ref circuit-member p1) (hash-ref circuit-member p2))
-                 [(#f #f)
-                  (begin
-                    (hash-set! circuits i (list p1 p2))
-                    (hash-set! circuit-member p1 i)
-                    (hash-set! circuit-member p2 i))]
-                 [(c1 #f)
-                  (begin
-                    (hash-set! circuits c1 (cons p2 (hash-ref circuits c1)))
-                    (hash-set! circuit-member p2 c1))]
-                 [(#f c2)
-                  (begin
-                    (hash-set! circuits c2 (cons p1 (hash-ref circuits c2)))
-                    (hash-set! circuit-member p1 c2))]
-                 [(c1 c2)
-                  (when (not (= c1 c2))
-                    (hash-set! circuits c1 (append (hash-ref circuits c1)
-                                                   (hash-ref circuits c2)))
-                    (do-ec (:list p (hash-ref circuits c2))
-                           (hash-set! circuit-member p c1))
-                    (hash-remove! circuits c2))])
-               (when (= i n)
-                 (let ([cs (hash-map->list (lambda (_ v) (length v)) circuits)])
-                   (format #t "Part 1: ~s\n" (apply * (take (sort cs  >=) 3)))))
-               (when (and (= (hash-count (const #t) circuit-member) l)
-                          (apply = (hash-map->list (lambda (_ v) v) circuit-member)))
-                 (format #t "Part 2: ~s\n" (* (first p1) (first p2)))
-                 (set! done #t)))))))
+           (match-let ([(_ . (p1 p2)) pd])
+             (match (list (hash-ref circuit-member p1) (hash-ref circuit-member p2))
+               [(#f #f)
+                (and (hash-set! circuits i (list p1 p2))
+                     (hash-set! circuit-member p1 i)
+                     (hash-set! circuit-member p2 i))]
+               [(c1 #f)
+                (and (hash-set! circuits c1 (cons p2 (hash-ref circuits c1)))
+                     (hash-set! circuit-member p2 c1))]
+               [(#f c2)
+                (and (hash-set! circuits c2 (cons p1 (hash-ref circuits c2)))
+                     (hash-set! circuit-member p1 c2))]
+               [(c1 c2)
+                (when (not (= c1 c2))
+                  (hash-set! circuits c1 (append (hash-ref circuits c1)
+                                                 (hash-ref circuits c2)))
+                  (do-ec (:list p (hash-ref circuits c2))
+                         (hash-set! circuit-member p c1))
+                  (hash-remove! circuits c2))])
+             (when (= i n)
+               (let* ([cs (hash-map->list (lambda (_ v) (length v)) circuits)]
+                      [l3 (take (sort cs >=) 3)])
+                 (format #t "Part 1: ~s\n" (apply * l3))))
+             (when (and (= (hash-count (const #t) circuit-member) l)
+                        (apply = (hash-map->list (lambda (_ v) v) circuit-member)))
+               (format #t "Part 2: ~s\n" (* (first p1) (first p2)))
+               (set! done #t))))))
 
 (define (solve-8 data n)
   (statprof
