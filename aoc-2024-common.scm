@@ -107,8 +107,8 @@
                  cached))))))))
 
 ;; example :of do generator
-(define (fibonacci n)
-  (list-ec (:do ([i 0] [a 0] [b 1]) ; bindings
-                (< i n)             ; condition
-                ((1+ i) b (+ a b))) ; re-binding
-           a))
+;; (define (fibonacci n)
+;;   (list-ec (:do ([i 0] [a 0] [b 1]) ; bindings
+;;                 (< i n)             ; condition
+;;                 ((1+ i) b (+ a b))) ; re-binding
+;;            a))
