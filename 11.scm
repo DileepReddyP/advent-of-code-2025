@@ -19,11 +19,11 @@
            (hash-set! tree-table device outputs))
     tree-table))
 
-(define-cached (device-bfs tree-table device dac? fft?)
+(define-cached (device-dfs tree-table device dac? fft?)
   (if (string= device "out")
       (if (and dac? fft?) 1 0)
       (sum-ec (:list next-device (hash-ref tree-table device))
-              (device-bfs tree-table next-device
+              (device-dfs tree-table next-device
                           (or dac? (string= "dac" next-device))
                           (or fft? (string= "fft" next-device))))))
 
@@ -31,5 +31,5 @@
   (statprof
    (lambda ()
      (let ([tree-table (parse-data data)])
-       (values (device-bfs tree-table "you" #t #t)
-               (device-bfs tree-table "svr" #f #f))))))
+       (values (device-dfs tree-table "you" #t #t)
+               (device-dfs tree-table "svr" #f #f))))))
